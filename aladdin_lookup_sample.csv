@@ -1,0 +1,16 @@
+company_name,aladdin_id,aliases,asset_class,region
+Goldman Sachs,ALADDIN_GS_001,"GS,Goldman,GS Group",Equities,North America
+Morgan Stanley,ALADDIN_MS_002,"MS,MS Capital",Fixed Income,North America
+JPMorgan Chase,ALADDIN_JPM_003,"JPMorgan,JP Morgan,JPMC",Multi-Asset,Global
+Bank of America,ALADDIN_BOA_004,"BofA,Bank of America Merrill Lynch,BAML",Multi-Asset,North America
+Citigroup,ALADDIN_CITI_005,"Citi,Citibank,Citi Markets",Equities,Global
+Wells Fargo,ALADDIN_WF_006,"WFC,Wells Fargo Securities",Fixed Income,North America
+BlackRock,ALADDIN_BLK_007,"BLK,iShares,BlackRock Solutions",Multi-Asset,Global
+Vanguard,ALADDIN_VG_008,"Vanguard Group,Vanguard Advisors",Equities,North America
+Fidelity,ALADDIN_FIDO_009,"Fidelity Investments,Fidelity Management",Multi-Asset,North America
+Schwab,ALADDIN_SCHW_010,"Charles Schwab,Schwab Capital Markets",Equities,North America
+Barclays,ALADDIN_BARC_011,"BARC,Barclays Capital,Barclays PLC",Fixed Income,Europe
+Deutsche Bank,ALADDIN_DB_012,"DB,Deutsche",Multi-Asset,Europe
+HSBC,ALADDIN_HSBC_013,"HSBC Holdings,HSBC Capital",Equities,Europe
+BNY Mellon,ALADDIN_BNY_014,"BNY,Mellon",Equities,North America
+State Street,ALADDIN_SST_015,"SST,State Street Global",Fixed Income,Global
