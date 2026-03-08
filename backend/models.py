@@ -118,6 +118,11 @@ class ExclusionCandidateResponse(BaseModel):
     source_doc: str
     company_name: str
 
+    # Extracted data (from orchestrator agents)
+    extracted_company: Dict[str, Any]
+    normalized_company: Dict[str, Any]
+    aladdin_match: Dict[str, Any]
+
     # Confidence scores
     overall_confidence: float
     ocr_confidence: float

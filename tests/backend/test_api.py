@@ -349,13 +349,15 @@ class TestAuditTrail:
         assert response.status_code == 200
         audit_entries = response.json()
 
-        # Should have 4 entries: extract, resolve, match, aggregate
-        assert len(audit_entries) == 4
+        # Should have 5 entries: extract, resolve, match, aggregate, auto_approve
+        # (auto_approve is added because confidence >= 0.90)
+        assert len(audit_entries) == 5
         actions = [entry["action"] for entry in audit_entries]
         assert "extract" in actions
         assert "resolve" in actions
         assert "match" in actions
         assert "aggregate" in actions
+        assert "auto_approve" in actions
 
     def test_audit_includes_explanations(self, client, sample_candidate_create):
         """Test audit entries include explanations"""

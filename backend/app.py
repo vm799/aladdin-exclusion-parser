@@ -15,6 +15,7 @@ from datetime import datetime
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from backend.database import close_db, init_db
 from backend.models import HealthResponse
@@ -92,18 +93,24 @@ app.include_router(dashboard_router, prefix="/api", tags=["exclusions"])
 async def http_exception_handler(request, exc):
     """Handle HTTP exceptions"""
     logger.error(f"HTTP error {exc.status_code}: {exc.detail}")
-    return {"detail": exc.detail, "status_code": exc.status_code}
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail, "status_code": exc.status_code}
+    )
 
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request, exc):
     """Handle unexpected exceptions"""
     logger.error(f"Unexpected error: {str(exc)}", exc_info=True)
-    return {
-        "detail": "Internal server error",
-        "status_code": 500,
-        "error_type": type(exc).__name__,
-    }
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": "Internal server error",
+            "status_code": 500,
+            "error_type": type(exc).__name__,
+        }
+    )
 
 
 # Root endpoint

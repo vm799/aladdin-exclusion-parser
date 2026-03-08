@@ -104,9 +104,9 @@ class ExclusionDB(Base):
 
     # Indexes for common queries
     __table_args__ = (
-        Index("idx_status", "status"),
-        Index("idx_created_at", "created_at"),
-        Index("idx_company_name", "company_name"),
+        Index("idx_exclusions_status", "status"),
+        Index("idx_exclusions_created_at", "created_at"),
+        Index("idx_exclusions_company_name", "company_name"),
     )
 
     def __repr__(self):
@@ -151,8 +151,8 @@ class AuditLogDB(Base):
 
     # Indexes
     __table_args__ = (
-        Index("idx_exclusion_id", "exclusion_id"),
-        Index("idx_timestamp", "timestamp"),
+        Index("idx_audit_exclusion_id", "exclusion_id"),
+        Index("idx_audit_timestamp", "timestamp"),
     )
 
     def __repr__(self):
@@ -192,8 +192,8 @@ class ApprovalOverrideDB(Base):
 
     # Indexes
     __table_args__ = (
-        Index("idx_exclusion_id", "exclusion_id"),
-        Index("idx_approved_at", "approved_at"),
+        Index("idx_override_exclusion_id", "exclusion_id"),
+        Index("idx_override_approved_at", "approved_at"),
     )
 
     def __repr__(self):
@@ -234,8 +234,8 @@ class ProcessingJobDB(Base):
 
     # Indexes
     __table_args__ = (
-        Index("idx_status", "status"),
-        Index("idx_created_at", "created_at"),
+        Index("idx_processing_jobs_status", "status"),
+        Index("idx_processing_jobs_created_at", "created_at"),
     )
 
     def __repr__(self):
