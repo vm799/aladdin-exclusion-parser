@@ -5,7 +5,7 @@ Using Pydantic for validation and serialization
 
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 
 from config.constants import DocType, ExclusionStatus, MatchType, ProcessingStatus
 
