@@ -69,6 +69,11 @@ class ConfidenceThresholds:
     AUTO_APPROVAL_THRESHOLD = 0.90  # Auto-approve if confidence >= 90%
     MANUAL_REVIEW_THRESHOLD = 0.60  # Flag for manual review if < 60%
 
+    # Confidence scoring weights (must sum to 1.0)
+    WEIGHT_OCR = 0.20  # Weight for OCR/extraction confidence
+    WEIGHT_ENTITY = 0.30  # Weight for entity resolution confidence
+    WEIGHT_ALADDIN = 0.50  # Weight for Aladdin match confidence
+
 
 class CompanyColumnNames:
     """Common column name variations for company data"""

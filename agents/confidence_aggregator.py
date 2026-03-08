@@ -42,19 +42,9 @@ class ConfidenceAggregatorAgent(SkillAgent):
     - Fallback Skill: Return all zeros on calculation error
     """
 
-    # Scoring weights - configurable for different use cases
-    WEIGHT_OCR = 0.20
-    WEIGHT_ENTITY = 0.30
-    WEIGHT_ALADDIN = 0.50
-
     def __init__(self, llm_config: "LLMConfig", name: str = "ConfidenceAggregatorAgent"):
         """Initialize confidence aggregator agent"""
         super().__init__(llm_config, name)
-
-        # Verify weights sum to 1.0
-        total_weight = self.WEIGHT_OCR + self.WEIGHT_ENTITY + self.WEIGHT_ALADDIN
-        if abs(total_weight - 1.0) > 0.001:
-            raise ValueError(f"Weights must sum to 1.0, got {total_weight}")
 
     async def core_skill(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -93,10 +83,10 @@ class ConfidenceAggregatorAgent(SkillAgent):
         company_name = input_data.get("company_name", "Unknown")
         aladdin_match = input_data.get("aladdin_match", aladdin > 0)
 
-        # Calculate weighted overall confidence
-        overall = (ocr * self.WEIGHT_OCR) + (
-            entity * self.WEIGHT_ENTITY
-        ) + (aladdin * self.WEIGHT_ALADDIN)
+        # Calculate weighted overall confidence using configured weights
+        overall = (ocr * ConfidenceThresholds.WEIGHT_OCR) + (
+            entity * ConfidenceThresholds.WEIGHT_ENTITY
+        ) + (aladdin * ConfidenceThresholds.WEIGHT_ALADDIN)
 
         # Determine if human review is required
         requires_review = overall < ConfidenceThresholds.AUTO_APPROVAL_THRESHOLD
@@ -106,13 +96,13 @@ class ConfidenceAggregatorAgent(SkillAgent):
 
         # Build detailed breakdown
         breakdown = {
-            "ocr_weight": self.WEIGHT_OCR,
-            "entity_weight": self.WEIGHT_ENTITY,
-            "aladdin_weight": self.WEIGHT_ALADDIN,
-            "ocr_contribution": round(ocr * self.WEIGHT_OCR, 4),
-            "entity_contribution": round(entity * self.WEIGHT_ENTITY, 4),
-            "aladdin_contribution": round(aladdin * self.WEIGHT_ALADDIN, 4),
-            "calculation": f"({ocr:.2f} * {self.WEIGHT_OCR}) + ({entity:.2f} * {self.WEIGHT_ENTITY}) + ({aladdin:.2f} * {self.WEIGHT_ALADDIN}) = {overall:.4f}",
+            "ocr_weight": ConfidenceThresholds.WEIGHT_OCR,
+            "entity_weight": ConfidenceThresholds.WEIGHT_ENTITY,
+            "aladdin_weight": ConfidenceThresholds.WEIGHT_ALADDIN,
+            "ocr_contribution": round(ocr * ConfidenceThresholds.WEIGHT_OCR, 4),
+            "entity_contribution": round(entity * ConfidenceThresholds.WEIGHT_ENTITY, 4),
+            "aladdin_contribution": round(aladdin * ConfidenceThresholds.WEIGHT_ALADDIN, 4),
+            "calculation": f"({ocr:.2f} * {ConfidenceThresholds.WEIGHT_OCR}) + ({entity:.2f} * {ConfidenceThresholds.WEIGHT_ENTITY}) + ({aladdin:.2f} * {ConfidenceThresholds.WEIGHT_ALADDIN}) = {overall:.4f}",
         }
 
         self.logger.info(

@@ -181,12 +181,41 @@ class OrchestratorAgent(SkillAgent):
             self.logger.info(f"Stage 4: Aggregating confidence scores")
             source_doc = input_data.get("source_doc", "unknown")
 
+            # Build lookup map for entity confidence (raw_name -> normalized)
+            normalized_lookup = {}
+            for norm_company in normalized_companies:
+                # Handle both dict and object forms
+                if isinstance(norm_company, dict):
+                    extracted_from = norm_company.get("extracted_from", {})
+                    if isinstance(extracted_from, dict):
+                        raw_name = extracted_from.get("raw_name", "")
+                    else:
+                        raw_name = getattr(extracted_from, "raw_name", "")
+                else:
+                    extracted_from = getattr(norm_company, "extracted_from", {})
+                    if isinstance(extracted_from, dict):
+                        raw_name = extracted_from.get("raw_name", "")
+                    else:
+                        raw_name = getattr(extracted_from, "raw_name", "")
+
+                if raw_name:
+                    normalized_lookup[raw_name.lower()] = norm_company
+
             for idx, (extracted, match) in enumerate(
                 zip(extracted_companies, matches)
             ):
                 try:
                     # Extract company name (from normalized if available)
                     company_name = extracted.get("raw_name", "Unknown")
+
+                    # Get entity confidence from normalized company if available
+                    entity_conf = 0.7  # Default medium confidence
+                    norm_company = normalized_lookup.get(company_name.lower())
+                    if norm_company:
+                        if isinstance(norm_company, dict):
+                            entity_conf = norm_company.get("normalization_confidence", 0.7)
+                        else:
+                            entity_conf = getattr(norm_company, "normalization_confidence", 0.7)
 
                     # Get confidence scores from match
                     aladdin_conf = (
@@ -199,7 +228,7 @@ class OrchestratorAgent(SkillAgent):
                     agg_result = await self.confidence_aggregator.execute(
                         {
                             "ocr_confidence": extracted.get("ocr_confidence", 0.0),
-                            "entity_confidence": extracted.get("ocr_confidence", 0.6),
+                            "entity_confidence": entity_conf,
                             "aladdin_confidence": aladdin_conf,
                             "company_name": company_name,
                             "aladdin_match": aladdin_conf > 0,
