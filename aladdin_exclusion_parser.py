@@ -161,6 +161,9 @@ st.markdown("""
         --blk-amber-light: #FEF3C7;
         --blk-blue: #1E40AF;
         --blk-blue-light: #DBEAFE;
+        --glass-bg: rgba(255, 255, 255, 0.6);
+        --glass-border: rgba(255, 255, 255, 0.35);
+        --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
     }
 
     /* ===== GLOBAL OVERRIDES ===== */
@@ -196,9 +199,9 @@ st.markdown("""
     /* ===== TOP HEADER BAR ===== */
     .aladdin-header {
         background: linear-gradient(135deg, #000000 0%, #1A1A2E 100%);
-        padding: 1.5rem 2rem;
+        padding: 1.2rem 2rem;
         border-radius: 0;
-        margin: -1rem -1rem 1.5rem -1rem;
+        margin: -1rem -1rem 1rem -1rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -206,11 +209,11 @@ st.markdown("""
     .aladdin-header-left {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 0.75rem;
     }
     .aladdin-logo-mark {
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
         background: #1A4332;
         border-radius: 6px;
         display: flex;
@@ -218,12 +221,12 @@ st.markdown("""
         justify-content: center;
         font-weight: 700;
         color: white;
-        font-size: 1rem;
+        font-size: 0.9rem;
         letter-spacing: -0.02em;
     }
     .aladdin-header h1 {
         color: #FFFFFF;
-        font-size: 1.4rem;
+        font-size: 1.25rem;
         font-weight: 600;
         margin: 0;
         letter-spacing: -0.01em;
@@ -231,85 +234,19 @@ st.markdown("""
     }
     .aladdin-header .subtitle {
         color: #9CA3AF;
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         margin: 0;
         font-weight: 400;
         letter-spacing: 0.02em;
     }
 
-    /* ===== STEP NAVIGATION BAR ===== */
-    .step-nav {
-        display: flex;
-        align-items: center;
-        background: var(--blk-white);
-        border: 1px solid var(--blk-border);
-        border-radius: 8px;
-        padding: 0;
-        margin-bottom: 1.5rem;
-        overflow: hidden;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-    }
-    .step-item {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 1rem 1.25rem;
-        cursor: pointer;
-        border-right: 1px solid var(--blk-border);
-        transition: background 0.15s ease;
-        text-decoration: none;
-        position: relative;
-    }
-    .step-item:last-child {
-        border-right: none;
-    }
-    .step-item:hover {
-        background: var(--blk-bg-cool);
-    }
-    .step-item.active {
-        background: var(--blk-green);
-    }
-    .step-item.active .step-num,
-    .step-item.active .step-label {
-        color: #FFFFFF !important;
-    }
-    .step-item.completed .step-num {
-        background: var(--blk-green-accent);
-        color: white;
-    }
-    .step-num {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        background: var(--blk-bg-cool);
-        color: var(--blk-slate);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.8rem;
-        font-weight: 600;
-        flex-shrink: 0;
-        border: 2px solid var(--blk-border);
-    }
-    .step-item.active .step-num {
-        background: rgba(255,255,255,0.2);
-        border-color: rgba(255,255,255,0.4);
-    }
-    .step-label {
-        font-size: 0.85rem;
-        font-weight: 500;
-        color: var(--blk-slate);
-        letter-spacing: -0.01em;
-    }
-
     /* ===== SECTION HEADERS ===== */
     .section-header {
-        font-size: 1.1rem;
+        font-size: 1rem;
         font-weight: 600;
         color: var(--blk-dark);
-        margin: 1.5rem 0 1rem 0;
-        padding-bottom: 0.5rem;
+        margin: 1rem 0 0.75rem 0;
+        padding-bottom: 0.4rem;
         border-bottom: 2px solid var(--blk-dark);
         letter-spacing: -0.01em;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -319,8 +256,8 @@ st.markdown("""
     .status-badge {
         display: inline-block;
         padding: 0.2rem 0.6rem;
-        border-radius: 4px;
-        font-size: 0.7rem;
+        border-radius: 10px;
+        font-size: 0.65rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -351,24 +288,26 @@ st.markdown("""
         border: 1px solid #FECACA;
     }
 
-    /* ===== STAT CARDS ===== */
+    /* ===== GLASSMORPHISM STAT CARDS ===== */
     .stat-card {
-        background: var(--blk-white);
-        border: 1px solid var(--blk-border);
-        border-radius: 8px;
-        padding: 1.25rem;
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        padding: 1rem;
         text-align: center;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+        box-shadow: var(--glass-shadow);
     }
     .stat-card .stat-value {
-        font-size: 2rem;
+        font-size: 1.75rem;
         font-weight: 700;
         color: var(--blk-dark);
         line-height: 1;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.2rem;
     }
     .stat-card .stat-label {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         color: var(--blk-mid-gray);
         text-transform: uppercase;
         letter-spacing: 0.06em;
@@ -390,7 +329,7 @@ st.markdown("""
     /* ===== CONFIDENCE BAR ===== */
     .confidence-bar-bg {
         width: 100%;
-        height: 6px;
+        height: 5px;
         background: var(--blk-bg-cool);
         border-radius: 3px;
         overflow: hidden;
@@ -401,70 +340,84 @@ st.markdown("""
         transition: width 0.3s ease;
     }
 
-    /* ===== REVIEW CARD ===== */
+    /* ===== GLASSMORPHISM REVIEW CARD ===== */
     .review-card {
-        background: var(--blk-white);
-        border: 1px solid var(--blk-border);
-        border-radius: 8px;
-        padding: 1.25rem;
-        margin-bottom: 0.75rem;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 0.5rem;
+        box-shadow: var(--glass-shadow);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
     .review-card:hover {
-        border-color: var(--blk-light-gray);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 28px rgba(0, 0, 0, 0.08);
     }
     .review-card-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.5rem;
     }
     .review-card-company {
-        font-size: 1rem;
+        font-size: 0.95rem;
         font-weight: 600;
         color: var(--blk-dark);
     }
     .review-card-arrow {
         color: var(--blk-mid-gray);
-        font-size: 0.9rem;
-        margin: 0 0.5rem;
+        font-size: 0.85rem;
+        margin: 0 0.4rem;
     }
     .review-card-id {
         font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         color: var(--blk-green);
         font-weight: 500;
-        background: var(--blk-green-light);
+        background: rgba(209, 250, 229, 0.7);
         padding: 0.15rem 0.5rem;
-        border-radius: 4px;
+        border-radius: 6px;
     }
     .review-card-noid {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         color: var(--blk-vermilion);
         font-weight: 500;
-        background: #FEE2E2;
+        background: rgba(254, 226, 226, 0.7);
         padding: 0.15rem 0.5rem;
-        border-radius: 4px;
+        border-radius: 6px;
     }
     .review-card-meta {
         display: flex;
-        gap: 1.5rem;
-        font-size: 0.8rem;
+        gap: 1.25rem;
+        font-size: 0.75rem;
         color: var(--blk-mid-gray);
     }
     .review-card-meta span {
         display: flex;
         align-items: center;
-        gap: 0.3rem;
+        gap: 0.25rem;
+    }
+
+    /* ===== GLASSMORPHISM OVERRIDE PANEL ===== */
+    .override-panel {
+        background: rgba(243, 244, 246, 0.65);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(209, 213, 219, 0.5);
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        margin-top: 0.25rem;
+        margin-bottom: 0.5rem;
     }
 
     /* ===== SIDEBAR STATUS BANNER ===== */
     .sidebar-status {
-        padding: 0.75rem 1rem;
-        border-radius: 6px;
-        font-size: 0.8rem;
+        padding: 0.6rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.78rem;
         font-weight: 500;
     }
     .sidebar-status-signed {
@@ -481,32 +434,75 @@ st.markdown("""
     /* ===== DATA TABLE STYLING ===== */
     .stDataFrame {
         border: 1px solid var(--blk-border) !important;
-        border-radius: 8px !important;
+        border-radius: 10px !important;
         overflow: hidden !important;
     }
 
     /* ===== BUTTON OVERRIDES ===== */
     .stButton > button {
-        border-radius: 6px !important;
+        border-radius: 8px !important;
         font-weight: 500 !important;
-        font-size: 0.85rem !important;
+        font-size: 0.82rem !important;
         letter-spacing: 0 !important;
         transition: all 0.15s ease !important;
+        cursor: pointer !important;
+        padding: 0.4rem 1rem !important;
     }
 
     .stButton > button[kind="primary"] {
         background-color: var(--blk-green) !important;
         border-color: var(--blk-green) !important;
+        color: #FFFFFF !important;
     }
 
     .stButton > button[kind="primary"]:hover {
         background-color: #143728 !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(26, 67, 50, 0.3);
+    }
+
+    .stButton > button[kind="secondary"] {
+        background-color: var(--blk-white) !important;
+        border: 1px solid var(--blk-border) !important;
+        color: var(--blk-dark) !important;
+    }
+
+    .stButton > button[kind="secondary"]:hover {
+        background-color: var(--blk-bg-cool) !important;
+        border-color: var(--blk-light-gray) !important;
+    }
+
+    /* ===== STEP NAV BUTTONS ===== */
+    .step-nav-row .stButton > button {
+        border-radius: 0 !important;
+        border: none !important;
+        border-right: 1px solid var(--blk-border) !important;
+        font-size: 0.8rem !important;
+        padding: 0.65rem 0.5rem !important;
+    }
+    .step-nav-row .stButton > button[kind="primary"] {
+        background-color: var(--blk-green) !important;
+        color: #FFFFFF !important;
+    }
+    .step-nav-row .stButton > button[kind="secondary"] {
+        background-color: var(--blk-white) !important;
+        color: var(--blk-slate) !important;
+    }
+    .step-nav-row .stButton > button[kind="secondary"]:hover {
+        background-color: var(--blk-bg-cool) !important;
+    }
+
+    /* ===== DOWNLOAD BUTTON ===== */
+    .stDownloadButton > button {
+        border-radius: 8px !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
     }
 
     /* ===== EXPANDER OVERRIDES ===== */
     .streamlit-expanderHeader {
         font-weight: 500 !important;
-        font-size: 0.9rem !important;
+        font-size: 0.85rem !important;
         color: var(--blk-dark) !important;
     }
 
@@ -516,33 +512,34 @@ st.markdown("""
 
     /* ===== UPLOAD AREA ===== */
     .upload-zone {
-        background: var(--blk-white);
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
         border: 2px dashed var(--blk-light-gray);
-        border-radius: 8px;
-        padding: 2rem;
+        border-radius: 12px;
+        padding: 1.5rem;
         text-align: center;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
     }
 
     /* ===== FOOTER ===== */
     .app-footer {
         text-align: center;
-        padding: 1rem 0;
+        padding: 0.75rem 0;
         color: var(--blk-mid-gray);
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         border-top: 1px solid var(--blk-border);
-        margin-top: 2rem;
+        margin-top: 1.5rem;
         letter-spacing: 0.02em;
     }
 
     /* ===== CHECKLIST STYLING ===== */
     .stCheckbox label {
-        font-size: 0.9rem !important;
+        font-size: 0.85rem !important;
     }
 
     /* ===== METRIC DELTA OVERRIDE ===== */
     [data-testid="stMetricDelta"] {
-        font-size: 0.75rem !important;
+        font-size: 0.7rem !important;
     }
 
     /* ===== TAB STYLING ===== */
@@ -552,14 +549,42 @@ st.markdown("""
     }
     .stTabs [data-baseweb="tab"] {
         font-weight: 500;
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         color: var(--blk-mid-gray);
         border-bottom: 2px solid transparent;
-        padding: 0.75rem 1.25rem;
+        padding: 0.6rem 1rem;
     }
     .stTabs [aria-selected="true"] {
         color: var(--blk-dark) !important;
         border-bottom-color: var(--blk-green) !important;
+    }
+
+    /* ===== GLASSMORPHISM SIGN-OFF PANEL ===== */
+    .signoff-panel {
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 14px;
+        padding: 1.25rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    }
+
+    /* ===== DISABLED SIGN-OFF HINT ===== */
+    .signoff-hint {
+        background: rgba(243, 244, 246, 0.6);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(229, 231, 235, 0.6);
+        border-radius: 8px;
+        padding: 0.6rem 0.85rem;
+        color: var(--blk-mid-gray);
+        font-size: 0.8rem;
+    }
+
+    /* ===== TIGHTER SPACING ===== */
+    .block-container {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -640,32 +665,19 @@ with st.sidebar:
 
 # ==================== STEP NAVIGATION ====================
 
-# Build step nav HTML
-step_nav_html = '<div class="step-nav">'
-for step in WORKFLOW_STEPS:
-    is_active = step["key"] == st.session_state.current_step
-    active_class = " active" if is_active else ""
-    step_nav_html += (
-        f'<div class="step-item{active_class}">'
-        f'<div class="step-num">{step["num"]}</div>'
-        f'<span class="step-label">{step["label"]}</span>'
-        f'</div>'
-    )
-step_nav_html += '</div>'
-st.markdown(step_nav_html, unsafe_allow_html=True)
-
-# Step navigation buttons (functional - Streamlit can't do clickable HTML divs)
-nav_cols = st.columns(4)
-for i, step in enumerate(WORKFLOW_STEPS):
-    with nav_cols[i]:
-        if st.button(
-            f"{step['num']}. {step['label']}",
-            key=f"nav_{step['key']}",
-            use_container_width=True,
-            type="primary" if step["key"] == st.session_state.current_step else "secondary",
-        ):
-            st.session_state.current_step = step["key"]
-            st.rerun()
+nav_container = st.container()
+with nav_container:
+    nav_cols = st.columns(4, gap="small")
+    for i, step in enumerate(WORKFLOW_STEPS):
+        with nav_cols[i]:
+            if st.button(
+                f"{step['num']}. {step['label']}",
+                key=f"nav_{step['key']}",
+                use_container_width=True,
+                type="primary" if step["key"] == st.session_state.current_step else "secondary",
+            ):
+                st.session_state.current_step = step["key"]
+                st.rerun()
 
 # ==================== TAB 1: UPLOAD & EXTRACT ====================
 
@@ -900,6 +912,7 @@ elif st.session_state.current_step == "review":
 
                 # Override input (shown only when requested)
                 if st.session_state.get(f"show_override_{global_idx}", False):
+                    st.markdown('<div class="override-panel">', unsafe_allow_html=True)
                     ovr_cols = st.columns([3, 1])
                     with ovr_cols[0]:
                         custom_id = st.text_input(
@@ -918,8 +931,7 @@ elif st.session_state.current_step == "review":
                                 st.session_state.data[global_idx]["review_timestamp"] = datetime.now().isoformat()
                                 st.session_state[f"show_override_{global_idx}"] = False
                                 st.rerun()
-
-                st.markdown("")
+                    st.markdown('</div>', unsafe_allow_html=True)
 
         with review_tabs[1]:
             fuzzy_items = [d for d in needs_review if d["match_type"] == "fuzzy"]
@@ -1122,8 +1134,7 @@ elif st.session_state.current_step == "export":
                 st.rerun()
         else:
             st.markdown(
-                '<div style="background:#F3F4F6;border:1px solid #E5E7EB;border-radius:6px;padding:0.75rem 1rem;'
-                'color:#6B7280;font-size:0.85rem;">Complete all fields and checklist items to enable sign-off.</div>',
+                '<div class="signoff-hint">Complete all fields and checklist items to enable sign-off.</div>',
                 unsafe_allow_html=True
             )
 
