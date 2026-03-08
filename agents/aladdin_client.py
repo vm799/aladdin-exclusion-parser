@@ -12,6 +12,7 @@ import asyncio
 import csv
 import json
 import logging
+import time
 from typing import Any, Dict, List, Optional, Tuple
 
 from agents.base_agent import SkillAgent
@@ -39,6 +40,9 @@ class AladdinClientAgent(SkillAgent):
     - Explanation Skill: Document API response time, match method
     - Fallback Skill: Return manual_required on API error
     """
+
+    # Cached set of valid match types for validation (avoid recreating on each call)
+    VALID_MATCH_TYPES = {t.value for t in MatchType}
 
     def __init__(
         self,
@@ -124,8 +128,8 @@ class AladdinClientAgent(SkillAgent):
         company = input_data.get("company")
         prefer_sdk = input_data.get("prefer_sdk", True)
 
-        if not isinstance(company, dict):
-            raise ValueError(f"Expected NormalizedCompany dict, got {type(company)}")
+        if not isinstance(company, (dict, NormalizedCompany)):
+            raise ValueError(f"Expected dict or NormalizedCompany, got {type(company)}")
 
         canonical_name = company.get("canonical_name", "")
 
@@ -136,7 +140,7 @@ class AladdinClientAgent(SkillAgent):
                 return result
 
         # Fall back to CSV
-        result = await self._query_csv(canonical_name)
+        result = self._query_csv(canonical_name)
         return result
 
     async def _query_aladdin_sdk(self, canonical_name: str) -> Optional[Dict[str, Any]]:
@@ -149,13 +153,18 @@ class AladdinClientAgent(SkillAgent):
             return None
 
         try:
-            import time
+            import asyncio
 
             start = time.time()
 
             # Call Aladdin API counterparty search endpoint
+            # Wrap blocking sync call in executor to avoid blocking event loop
             req_body = {"query": {"company_name": canonical_name}}
-            response = self.aladdin_api.post("/counterparties:search", req_body)
+            loop = asyncio.get_event_loop()
+            response = await loop.run_in_executor(
+                None,
+                lambda: self.aladdin_api.post("/counterparties:search", req_body)
+            )
 
             elapsed_ms = (time.time() - start) * 1000
 
@@ -186,14 +195,12 @@ class AladdinClientAgent(SkillAgent):
             self.logger.error(f"Aladdin SDK query failed: {str(e)}")
             return None
 
-    async def _query_csv(self, canonical_name: str) -> Dict[str, Any]:
+    def _query_csv(self, canonical_name: str) -> Dict[str, Any]:
         """
         Query CSV fallback database
 
         Performs exact and fuzzy matching on canonical_name
         """
-        import time
-
         start = time.time()
         canonical_lower = canonical_name.lower().strip()
 
@@ -212,22 +219,28 @@ class AladdinClientAgent(SkillAgent):
                 "source": "csv",
             }
 
-        # Fuzzy match: check for substring presence
-        for db_name, entry in self.csv_db.items():
-            if canonical_lower in db_name or db_name in canonical_lower:
-                # Verify match quality
-                if len(canonical_lower) > 3 and len(db_name) > 3:  # Avoid false positives
-                    elapsed_ms = (time.time() - start) * 1000
+        # Fuzzy match: use similarity scoring to avoid false positives
+        best_match = None
+        best_similarity = 0.75  # Threshold for fuzzy match
 
-                    return {
-                        "aladdin_id": entry.get("aladdin_id"),
-                        "isin": entry.get("isin"),
-                        "entity_name": entry.get("company_name", canonical_name),
-                        "match_confidence": ConfidenceThresholds.ALADDIN_FUZZY,
-                        "match_type": MatchType.FUZZY.value,
-                        "api_response_time_ms": elapsed_ms,
-                        "source": "csv",
-                    }
+        for db_name, entry in self.csv_db.items():
+            similarity = self._string_similarity(canonical_lower, db_name)
+            if similarity > best_similarity and similarity > best_match[1] if best_match else similarity > best_similarity:
+                best_match = (entry, similarity)
+
+        if best_match:
+            entry, similarity = best_match
+            elapsed_ms = (time.time() - start) * 1000
+
+            return {
+                "aladdin_id": entry.get("aladdin_id"),
+                "isin": entry.get("isin"),
+                "entity_name": entry.get("company_name", canonical_name),
+                "match_confidence": ConfidenceThresholds.ALADDIN_FUZZY,
+                "match_type": MatchType.FUZZY.value,
+                "api_response_time_ms": elapsed_ms,
+                "source": "csv",
+            }
 
         # No match found
         elapsed_ms = (time.time() - start) * 1000
@@ -241,6 +254,28 @@ class AladdinClientAgent(SkillAgent):
             "api_response_time_ms": elapsed_ms,
             "source": "csv",
         }
+
+    @staticmethod
+    def _string_similarity(s1: str, s2: str) -> float:
+        """Calculate string similarity using Jaccard similarity on tokens"""
+        s1 = s1.lower().strip()
+        s2 = s2.lower().strip()
+
+        if s1 == s2:
+            return 1.0
+        if not s1 or not s2:
+            return 0.0
+
+        # Split into tokens (words)
+        set1 = set(s1.split())
+        set2 = set(s2.split())
+        if not set1 or not set2:
+            return 0.0
+
+        # Jaccard similarity: intersection / union
+        intersection = len(set1 & set2)
+        union = len(set1 | set2)
+        return intersection / union if union > 0 else 0.0
 
     async def validation_skill(
         self, input_data: Dict[str, Any], output: Dict[str, Any]
@@ -261,8 +296,7 @@ class AladdinClientAgent(SkillAgent):
         if not isinstance(confidence, (int, float)) or not (0 <= confidence <= 1):
             return (False, f"Invalid confidence score: {confidence}")
 
-        valid_types = {t.value for t in MatchType}
-        if match_type not in valid_types:
+        if match_type not in self.VALID_MATCH_TYPES:
             return (False, f"Invalid match_type: {match_type}")
 
         if match_type == MatchType.MANUAL_REQUIRED.value:

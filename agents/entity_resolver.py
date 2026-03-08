@@ -12,6 +12,8 @@ import asyncio
 import csv
 import json
 import logging
+import re
+import time
 from typing import Any, Dict, List, Optional, Tuple
 
 from agents.base_agent import SkillAgent
@@ -225,7 +227,17 @@ Return JSON:
             )
 
             text = response.choices[0].message.content
-            json_str = text[text.find("{") : text.rfind("}") + 1]
+
+            # Extract JSON more robustly - handle multiple {} blocks
+            json_match = re.search(r'\{[^{}]*"resolutions"[^{}]*\}', text, re.DOTALL)
+            if not json_match:
+                # Fallback: try to find any valid JSON object
+                json_match = re.search(r'\{.*\}', text, re.DOTALL)
+
+            if not json_match:
+                raise ValueError("No valid JSON found in GPT-4 response")
+
+            json_str = json_match.group()
             result = json.loads(json_str)
 
             for resolution in result.get("resolutions", []):
@@ -253,11 +265,17 @@ Return JSON:
                     unresolved.append(original)
                     ambiguities.append({"raw_name": raw_name, "reason": "GPT-4 uncertain"})
 
-        except Exception as e:
-            self.logger.error(f"GPT-4 resolution failed: {str(e)}")
+        except (json.JSONDecodeError, ValueError, KeyError) as e:
+            self.logger.error(f"GPT-4 response parsing failed: {str(e)}")
+            self.logger.debug(f"Response was: {text}")
             # Fall back: mark all as unresolved
             unresolved = companies
-            ambiguities = [{"raw_name": c.raw_name, "reason": str(e)} for c in companies]
+            ambiguities = [{"raw_name": c.raw_name, "reason": "GPT-4 response parse error"} for c in companies]
+        except Exception as e:
+            self.logger.error(f"Unexpected error in GPT-4 resolution: {str(e)}", exc_info=True)
+            # Fall back: mark all as unresolved
+            unresolved = companies
+            ambiguities = [{"raw_name": c.raw_name, "reason": f"Unexpected error: {type(e).__name__}"} for c in companies]
 
         return {
             "normalized": normalized,
