@@ -66,6 +66,19 @@ class LLMConfig:
             f"max_tokens={max_tokens}, async_enabled={enable_async}"
         )
 
+    def _resolve_params(
+        self,
+        model: Optional[str] = None,
+        temperature: Optional[float] = None,
+        max_tokens: Optional[int] = None,
+    ) -> Dict[str, Any]:
+        """Resolve parameter overrides with defaults"""
+        return {
+            "model": model or self.model,
+            "temperature": temperature if temperature is not None else self.temperature,
+            "max_tokens": max_tokens or self.max_tokens,
+        }
+
     def create_completion(
         self,
         messages: List[Dict[str, str]],
@@ -87,17 +100,15 @@ class LLMConfig:
         Returns:
             OpenAI response object
         """
-        model = model or self.model
-        temperature = temperature if temperature is not None else self.temperature
-        max_tokens = max_tokens or self.max_tokens
+        params = self._resolve_params(model, temperature, max_tokens)
 
         try:
             response = self.client.chat.completions.create(
-                model=model,
+                model=params["model"],
                 messages=messages,
-                tools=tools if tools else None,
-                temperature=temperature,
-                max_tokens=max_tokens,
+                tools=tools,
+                temperature=params["temperature"],
+                max_tokens=params["max_tokens"],
             )
             return response
         except Exception as e:
@@ -128,17 +139,15 @@ class LLMConfig:
         if not self.async_client:
             raise RuntimeError("Async client not enabled")
 
-        model = model or self.model
-        temperature = temperature if temperature is not None else self.temperature
-        max_tokens = max_tokens or self.max_tokens
+        params = self._resolve_params(model, temperature, max_tokens)
 
         try:
             response = await self.async_client.chat.completions.create(
-                model=model,
+                model=params["model"],
                 messages=messages,
-                tools=tools if tools else None,
-                temperature=temperature,
-                max_tokens=max_tokens,
+                tools=tools,
+                temperature=params["temperature"],
+                max_tokens=params["max_tokens"],
             )
             return response
         except Exception as e:
@@ -154,18 +163,39 @@ class LLMConfig:
 
         Returns:
             List of tool calls with id, function name, arguments
+
+        Raises:
+            ValueError: If tool_calls format is unexpected or JSON parsing fails
         """
         tool_calls = []
-        if hasattr(response.choices[0].message, "tool_calls"):
+
+        if not hasattr(response.choices[0].message, "tool_calls"):
+            logger.debug("Response contains no tool_calls")
+            return tool_calls
+
+        try:
             for tool_call in response.choices[0].message.tool_calls:
+                try:
+                    arguments = json.loads(tool_call.function.arguments)
+                except json.JSONDecodeError as e:
+                    logger.error(
+                        f"Failed to parse tool arguments: {tool_call.function.arguments}",
+                        exc_info=True,
+                    )
+                    raise ValueError(f"Malformed tool arguments: {str(e)}")
+
                 tool_calls.append(
                     {
                         "id": tool_call.id,
                         "type": tool_call.type,
                         "function": tool_call.function.name,
-                        "arguments": json.loads(tool_call.function.arguments),
+                        "arguments": arguments,
                     }
                 )
+        except AttributeError as e:
+            logger.error(f"Unexpected tool_call structure: {str(e)}", exc_info=True)
+            raise ValueError(f"Tool call format unexpected: {str(e)}")
+
         return tool_calls
 
     def extract_text_response(self, response: Any) -> str:

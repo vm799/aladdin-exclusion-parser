@@ -6,13 +6,17 @@ PAUL = Projects + Auditing + Unified Logic + Lifecycle
 Constitutional Principles: Helpful + Harmless + Honest
 """
 
-import json
 import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Dict, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+from config.constants import ConstitutionalPrinciples
+
+if TYPE_CHECKING:
+    from config.llm import LLMConfig
 
 logger = logging.getLogger(__name__)
 
@@ -26,12 +30,7 @@ class SkillResult(BaseModel):
     validation_msg: Optional[str] = None
     audit_explanation: Optional[str] = None
     agent_name: Optional[str] = None
-    timestamp: str = None
-
-    def __init__(self, **data):
-        super().__init__(**data)
-        if not self.timestamp:
-            self.timestamp = datetime.utcnow().isoformat()
+    timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
 
 
 class SkillAgent(ABC):
@@ -58,13 +57,6 @@ class SkillAgent(ABC):
         self.name = name
         self.agent_id = agent_id or f"{name}_{datetime.utcnow().isoformat()}"
         self.logger = logging.getLogger(f"agent.{name}")
-
-        # Constitutional principles
-        self.constitution = {
-            "helpful": "Actively assist with exclusion parsing; provide clear explanations",
-            "harmless": "Never corrupt data; flag uncertainties; require human approval before Aladdin push",
-            "honest": "Explain confidence scores transparently; audit all decisions; admit limitations",
-        }
 
         self.logger.info(f"Initialized {self.name} with agent_id={self.agent_id}")
 
@@ -155,7 +147,9 @@ class SkillAgent(ABC):
             SkillResult with data, validation, and audit trail
         """
         try:
-            self.logger.info(f"Executing core_skill with input: {json.dumps(input_data)[:100]}...")
+            # Only log large payloads at debug level to avoid hot-path overhead
+            if self.logger.isEnabledFor(logging.DEBUG):
+                self.logger.debug(f"Executing {self.name} with input keys: {list(input_data.keys())}")
 
             # Execute core skill
             output = await self.core_skill(input_data)
@@ -180,12 +174,22 @@ class SkillAgent(ABC):
             self.logger.info(f"Execution completed successfully: {self.agent_id}")
             return result
 
-        except Exception as e:
-            # Fallback with PAUL "Harmless" principle
-            self.logger.error(f"Core skill failed, executing fallback: {str(e)}", exc_info=True)
+        except ValueError as e:
+            # Expected validation errors
+            self.logger.warning(f"Validation failed: {str(e)}")
             fallback_output = await self.fallback_skill(input_data, e)
-
-            result = SkillResult(
+            return SkillResult(
+                success=False,
+                data=fallback_output,
+                error=str(e),
+                audit_explanation=f"Validation error: {type(e).__name__}",
+                agent_name=self.name,
+            )
+        except Exception as e:
+            # Unexpected errors - execute fallback
+            self.logger.error(f"Unexpected error, executing fallback: {str(e)}", exc_info=True)
+            fallback_output = await self.fallback_skill(input_data, e)
+            return SkillResult(
                 success=False,
                 data=fallback_output,
                 error=str(e),
@@ -193,24 +197,15 @@ class SkillAgent(ABC):
                 agent_name=self.name,
             )
 
-            return result
-
-    def validate_constitutional_principles(self) -> Dict[str, str]:
+    def get_constitutional_principles(self) -> Dict[str, str]:
         """
-        Validate that agent implements constitutional principles
+        Get PAUL constitutional principles for this agent
 
         Returns:
-            Dictionary of principle -> implementation status
+            Dictionary of principle -> description
         """
         return {
-            "helpful": "✓ Agent provides explanations and audit trails",
-            "harmless": "✓ Agent validates output and has fallback strategies",
-            "honest": "✓ Agent documents confidence and limitations",
+            "helpful": ConstitutionalPrinciples.HELPFUL,
+            "harmless": ConstitutionalPrinciples.HARMLESS,
+            "honest": ConstitutionalPrinciples.HONEST,
         }
-
-
-# Type stubs for LLM config (will be imported from config module)
-class LLMConfig:
-    """Placeholder for LLM configuration - imported from config.llm"""
-
-    pass

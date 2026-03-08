@@ -7,7 +7,6 @@ from agents.models import (
     AuditLogEntry,
     ConfidenceScore,
     ExclusionCandidate,
-    ExclusionCandidate,
     ExtractedCompany,
     NormalizedCompany,
     ProcessingJob,
