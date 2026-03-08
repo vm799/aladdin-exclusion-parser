@@ -150,7 +150,7 @@ st.markdown("""
         --blk-mid-gray: #6B7280;
         --blk-light-gray: #D1D5DB;
         --blk-border: #E5E7EB;
-        --blk-bg-warm: #F8F7F4;
+        --blk-bg-warm: #E8EAF0;
         --blk-bg-cool: #F3F4F6;
         --blk-white: #FFFFFF;
         --blk-green: #1A4332;
@@ -161,9 +161,9 @@ st.markdown("""
         --blk-amber-light: #FEF3C7;
         --blk-blue: #1E40AF;
         --blk-blue-light: #DBEAFE;
-        --glass-bg: rgba(255, 255, 255, 0.6);
-        --glass-border: rgba(255, 255, 255, 0.35);
-        --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        --glass-bg: rgba(255, 255, 255, 0.72);
+        --glass-border: rgba(255, 255, 255, 0.5);
+        --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
     }
 
     /* ===== GLOBAL OVERRIDES ===== */
@@ -291,11 +291,11 @@ st.markdown("""
     /* ===== GLASSMORPHISM STAT CARDS ===== */
     .stat-card {
         background: var(--glass-bg);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border: 1px solid var(--glass-border);
-        border-radius: 12px;
-        padding: 1rem;
+        border-radius: 14px;
+        padding: 1.1rem 1rem;
         text-align: center;
         box-shadow: var(--glass-shadow);
     }
@@ -343,18 +343,18 @@ st.markdown("""
     /* ===== GLASSMORPHISM REVIEW CARD ===== */
     .review-card {
         background: var(--glass-bg);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border: 1px solid var(--glass-border);
-        border-radius: 12px;
+        border-radius: 14px;
         padding: 1rem 1.25rem;
         margin-bottom: 0.5rem;
         box-shadow: var(--glass-shadow);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
     .review-card:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 28px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 36px rgba(0, 0, 0, 0.1);
     }
     .review-card-header {
         display: flex;
@@ -403,14 +403,15 @@ st.markdown("""
 
     /* ===== GLASSMORPHISM OVERRIDE PANEL ===== */
     .override-panel {
-        background: rgba(243, 244, 246, 0.65);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(209, 213, 219, 0.5);
-        border-radius: 10px;
-        padding: 0.75rem 1rem;
-        margin-top: 0.25rem;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        border-radius: 12px;
+        padding: 0.85rem 1rem;
+        margin-top: 0.35rem;
         margin-bottom: 0.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     }
 
     /* ===== SIDEBAR STATUS BANNER ===== */
@@ -433,9 +434,10 @@ st.markdown("""
 
     /* ===== DATA TABLE STYLING ===== */
     .stDataFrame {
-        border: 1px solid var(--blk-border) !important;
-        border-radius: 10px !important;
+        border: 1px solid rgba(255, 255, 255, 0.5) !important;
+        border-radius: 12px !important;
         overflow: hidden !important;
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05) !important;
     }
 
     /* ===== BUTTON OVERRIDES ===== */
@@ -561,13 +563,13 @@ st.markdown("""
 
     /* ===== GLASSMORPHISM SIGN-OFF PANEL ===== */
     .signoff-panel {
-        background: rgba(255, 255, 255, 0.55);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        border-radius: 14px;
-        padding: 1.25rem;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+        background: rgba(255, 255, 255, 0.68);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
     }
 
     /* ===== DISABLED SIGN-OFF HINT ===== */
@@ -579,6 +581,58 @@ st.markdown("""
         padding: 0.6rem 0.85rem;
         color: var(--blk-mid-gray);
         font-size: 0.8rem;
+    }
+
+    /* ===== STREAMLIT ALERT OVERRIDES (fix white-on-yellow) ===== */
+    .stAlert > div {
+        color: #1A1A2E !important;
+    }
+    .stAlert > div p,
+    .stAlert > div span,
+    .stAlert > div strong,
+    .stAlert > div a {
+        color: #1A1A2E !important;
+    }
+    /* Warning: dark brown text on amber */
+    .stAlert [data-testid="stNotificationContentWarning"],
+    .stAlert [data-testid="stNotificationContentWarning"] p,
+    .stAlert [data-testid="stNotificationContentWarning"] span,
+    .stAlert [data-testid="stNotificationContentWarning"] strong {
+        color: #78350F !important;
+    }
+    /* Info: dark blue text */
+    .stAlert [data-testid="stNotificationContentInfo"],
+    .stAlert [data-testid="stNotificationContentInfo"] p,
+    .stAlert [data-testid="stNotificationContentInfo"] span {
+        color: #1E3A5F !important;
+    }
+    /* Success: dark green text */
+    .stAlert [data-testid="stNotificationContentSuccess"],
+    .stAlert [data-testid="stNotificationContentSuccess"] p,
+    .stAlert [data-testid="stNotificationContentSuccess"] span {
+        color: #064E3B !important;
+    }
+    /* Error: dark red text */
+    .stAlert [data-testid="stNotificationContentError"],
+    .stAlert [data-testid="stNotificationContentError"] p,
+    .stAlert [data-testid="stNotificationContentError"] span {
+        color: #7F1D1D !important;
+    }
+    /* Broader fallback for all notification types */
+    div[data-baseweb="notification"] * {
+        color: #1A1A2E !important;
+    }
+    div[data-baseweb="notification"][kind="warning"] * {
+        color: #78350F !important;
+    }
+    div[data-baseweb="notification"][kind="info"] * {
+        color: #1E3A5F !important;
+    }
+    div[data-baseweb="notification"][kind="positive"] * {
+        color: #064E3B !important;
+    }
+    div[data-baseweb="notification"][kind="negative"] * {
+        color: #7F1D1D !important;
     }
 
     /* ===== TIGHTER SPACING ===== */
@@ -960,7 +1014,13 @@ elif st.session_state.current_step == "review":
         with review_tabs[2]:
             manual_items = [d for d in needs_review if d["match_type"] == "manual_required"]
             if manual_items:
-                st.warning(f"**{len(manual_items)}** items could not be automatically matched and require manual Aladdin ID lookup.")
+                st.markdown(
+                    f'<div style="background:#FEF3C7;border:1px solid #FDE68A;border-left:4px solid #D97706;'
+                    f'border-radius:8px;padding:0.75rem 1rem;color:#78350F;font-size:0.85rem;font-weight:500;">'
+                    f'<strong>{len(manual_items)}</strong> items could not be automatically matched and require manual Aladdin ID lookup.'
+                    f'</div>',
+                    unsafe_allow_html=True
+                )
                 for item in manual_items:
                     st.markdown(
                         f'<div class="review-card" style="border-left: 3px solid #DC2626;">'
@@ -1050,7 +1110,13 @@ elif st.session_state.current_step == "approval":
         st.dataframe(reject_df, use_container_width=True, hide_index=True)
 
     if pending_items:
-        st.warning(f"{len(pending_items)} items still pending review. Return to **Review & Match** to complete.")
+        st.markdown(
+            f'<div style="background:#FEF3C7;border:1px solid #FDE68A;border-left:4px solid #D97706;'
+            f'border-radius:8px;padding:0.75rem 1rem;color:#78350F;font-size:0.85rem;font-weight:500;">'
+            f'{len(pending_items)} items still pending review. Return to <strong>Review &amp; Match</strong> to complete.'
+            f'</div>',
+            unsafe_allow_html=True
+        )
 
 # ==================== TAB 4: EXPORT & SIGN-OFF ====================
 
@@ -1099,7 +1165,12 @@ elif st.session_state.current_step == "export":
 
         # Sign-off section
         st.markdown('<div class="section-header">Final Sign-Off</div>', unsafe_allow_html=True)
-        st.markdown("This export must be reviewed and signed off by an authorized user before upload to Aladdin.")
+        st.markdown('<div class="signoff-panel">', unsafe_allow_html=True)
+        st.markdown(
+            '<div style="color:#6B7280;font-size:0.82rem;margin-bottom:0.5rem;">'
+            'This export must be reviewed and signed off by an authorized user before upload to Aladdin.</div>',
+            unsafe_allow_html=True
+        )
 
         col1, col2 = st.columns(2)
 
@@ -1137,6 +1208,7 @@ elif st.session_state.current_step == "export":
                 '<div class="signoff-hint">Complete all fields and checklist items to enable sign-off.</div>',
                 unsafe_allow_html=True
             )
+        st.markdown('</div>', unsafe_allow_html=True)
 
         if st.session_state.signed_off:
             st.divider()
