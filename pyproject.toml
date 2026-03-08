@@ -1,0 +1,82 @@
+[build-system]
+requires = ["setuptools>=65", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aladdin-exclusion-parser"
+version = "0.1.0"
+description = "AI-powered exclusion parsing with human-in-loop review and Aladdin integration"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    {name = "Aladdin Exclusion Parser Team", email = "team@example.com"}
+]
+
+dependencies = [
+    # Frontend
+    "streamlit>=1.28.0",
+    "pandas>=2.0.0",
+    # Core LLM & AI
+    "openai>=1.3.0",
+    "python-dotenv>=1.0.0",
+    # Backend
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    "pydantic>=2.0.0",
+    # Database
+    "sqlalchemy>=2.0.0",
+    "psycopg2-binary>=2.9.0",
+    "alembic>=1.13.0",
+    # Document Processing
+    "pdf2image>=1.16.0",
+    "pytesseract>=0.3.10",
+    "python-pptx>=0.6.21",
+    "python-docx>=0.8.11",
+    "email-validator>=2.0.0",
+    "python-multipart>=0.0.6",
+    # Testing
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.12.0",
+    # Utilities
+    "python-dateutil>=2.8.0",
+    "requests>=2.31.0",
+    "aiohttp>=3.9.0",
+    "typing-extensions>=4.8.0",
+    # Aladdin SDK
+    "keyring>=24.3.0",
+    # Logging & Monitoring
+    "python-json-logger>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+    "pytest-cov>=4.1.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["agents", "backend", "config", "tests"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "asyncio: async test",
+    "slow: slow test",
+    "integration: integration test",
+    "contract: contract test",
+    "unit: unit test",
+]
