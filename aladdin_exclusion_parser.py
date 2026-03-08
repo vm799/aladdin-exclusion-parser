@@ -150,7 +150,7 @@ st.markdown("""
         --blk-mid-gray: #6B7280;
         --blk-light-gray: #D1D5DB;
         --blk-border: #E5E7EB;
-        --blk-bg-warm: #E8EAF0;
+        --blk-bg-warm: #EFF1F5;
         --blk-bg-cool: #F3F4F6;
         --blk-white: #FFFFFF;
         --blk-green: #1A4332;
@@ -161,9 +161,9 @@ st.markdown("""
         --blk-amber-light: #FEF3C7;
         --blk-blue: #1E40AF;
         --blk-blue-light: #DBEAFE;
-        --glass-bg: rgba(255, 255, 255, 0.72);
-        --glass-border: rgba(255, 255, 255, 0.5);
-        --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+        --glass-bg: rgba(255, 255, 255, 0.85);
+        --glass-border: rgba(0, 0, 0, 0.06);
+        --glass-shadow: 0 2px 16px rgba(0, 0, 0, 0.10);
     }
 
     /* ===== GLOBAL OVERRIDES ===== */
@@ -264,7 +264,7 @@ st.markdown("""
     }
     .badge-pending {
         background: var(--blk-amber-light);
-        color: #92400E;
+        color: #78350F;
         border: 1px solid #FDE68A;
     }
     .badge-manual {
@@ -403,15 +403,15 @@ st.markdown("""
 
     /* ===== GLASSMORPHISM OVERRIDE PANEL ===== */
     .override-panel {
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.55);
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(0, 0, 0, 0.06);
         border-radius: 12px;
         padding: 0.85rem 1rem;
         margin-top: 0.35rem;
         margin-bottom: 0.5rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     }
 
     /* ===== SIDEBAR STATUS BANNER ===== */
@@ -563,23 +563,23 @@ st.markdown("""
 
     /* ===== GLASSMORPHISM SIGN-OFF PANEL ===== */
     .signoff-panel {
-        background: rgba(255, 255, 255, 0.68);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.55);
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(0, 0, 0, 0.06);
         border-radius: 16px;
         padding: 1.5rem;
-        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
     }
 
     /* ===== DISABLED SIGN-OFF HINT ===== */
     .signoff-hint {
-        background: rgba(243, 244, 246, 0.6);
+        background: rgba(243, 244, 246, 0.7);
         backdrop-filter: blur(8px);
-        border: 1px solid rgba(229, 231, 235, 0.6);
+        border: 1px solid rgba(0, 0, 0, 0.06);
         border-radius: 8px;
         padding: 0.6rem 0.85rem;
-        color: var(--blk-mid-gray);
+        color: #4B5563;
         font-size: 0.8rem;
     }
 
@@ -639,6 +639,20 @@ st.markdown("""
     .block-container {
         padding-top: 0.5rem !important;
         padding-bottom: 0.5rem !important;
+    }
+
+    /* ===== ACCESSIBILITY FALLBACKS ===== */
+    @media (prefers-reduced-transparency) {
+        .stat-card, .review-card, .override-panel, .signoff-panel {
+            background: #FFFFFF !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+    }
+    @supports not (backdrop-filter: blur(1px)) {
+        .stat-card, .review-card, .override-panel, .signoff-panel {
+            background: rgba(255, 255, 255, 0.96) !important;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
