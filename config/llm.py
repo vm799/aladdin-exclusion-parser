@@ -49,22 +49,26 @@ class LLMConfig:
             enable_async: Enable async client
         """
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
-        if not self.api_key:
-            raise ValueError("OPENAI_API_KEY environment variable not set")
-
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
         self.timeout = timeout
 
-        # Initialize clients
-        self.client = OpenAI(api_key=self.api_key, timeout=timeout)
-        self.async_client = AsyncOpenAI(api_key=self.api_key, timeout=timeout) if enable_async else None
-
-        logger.info(
-            f"Initialized LLMConfig: model={model}, temp={temperature}, "
-            f"max_tokens={max_tokens}, async_enabled={enable_async}"
-        )
+        # Initialize clients - optional if API key not available
+        if self.api_key:
+            self.client = OpenAI(api_key=self.api_key, timeout=timeout)
+            self.async_client = AsyncOpenAI(api_key=self.api_key, timeout=timeout) if enable_async else None
+            logger.info(
+                f"Initialized LLMConfig: model={model}, temp={temperature}, "
+                f"max_tokens={max_tokens}, async_enabled={enable_async}"
+            )
+        else:
+            self.client = None
+            self.async_client = None
+            logger.info(
+                f"LLMConfig initialized in DEMO MODE (no OPENAI_API_KEY): "
+                f"model={model}, async_enabled=False"
+            )
 
     def _resolve_params(
         self,
@@ -98,8 +102,12 @@ class LLMConfig:
             max_tokens: Optional token limit override
 
         Returns:
-            OpenAI response object
+            OpenAI response object or None if API unavailable
         """
+        if not self.client:
+            logger.warning("OpenAI API not available (no API key) - returning None")
+            return None
+
         params = self._resolve_params(model, temperature, max_tokens)
 
         try:
@@ -134,10 +142,11 @@ class LLMConfig:
             max_tokens: Optional token limit override
 
         Returns:
-            OpenAI response object
+            OpenAI response object or None if API unavailable
         """
         if not self.async_client:
-            raise RuntimeError("Async client not enabled")
+            logger.warning("Async OpenAI API not available - returning None")
+            return None
 
         params = self._resolve_params(model, temperature, max_tokens)
 
@@ -235,7 +244,11 @@ def get_default_llm_config() -> LLMConfig:
     """Get or create default LLM configuration"""
     global _default_config
     if _default_config is None:
-        _default_config = LLMConfig()
+        try:
+            _default_config = LLMConfig()
+        except ValueError:
+            # No API key available - create config in demo mode
+            _default_config = LLMConfig(api_key="demo_mode_no_api_key")
     return _default_config
 
 
