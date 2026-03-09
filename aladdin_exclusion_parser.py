@@ -234,7 +234,7 @@ st.markdown("""
         background: linear-gradient(135deg, #000000 0%, #1A1A2E 100%);
         padding: 1.2rem 2rem;
         border-radius: 0;
-        margin: -1rem -1rem 1rem -1rem;
+        margin: 0 -1rem 1rem -1rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -912,8 +912,20 @@ st.markdown("""
 
     /* ===== TIGHTER SPACING ===== */
     .block-container {
-        padding-top: 0.5rem !important;
+        padding-top: 1rem !important;
         padding-bottom: 0.5rem !important;
+    }
+
+    /* Push content below Streamlit toolbar so header is not hidden */
+    header[data-testid="stHeader"] {
+        background: transparent !important;
+        pointer-events: none;
+    }
+    header[data-testid="stHeader"] > * {
+        pointer-events: auto;
+    }
+    [data-testid="stToolbar"] {
+        z-index: 999 !important;
     }
 
     /* ===== ACCESSIBILITY FALLBACKS ===== */
@@ -1088,6 +1100,108 @@ st.markdown("""
     .stNumberInput input,
     .stDateInput input {
         outline: none !important;
+    }
+
+    /* ===== DESKTOP RESPONSIVENESS ===== */
+
+    /* Large desktops (1440px+): wider content, larger type */
+    @media (min-width: 1440px) {
+        .block-container {
+            max-width: 1280px !important;
+            padding-left: 2rem !important;
+            padding-right: 2rem !important;
+        }
+        .aladdin-header {
+            padding: 1.4rem 2.5rem;
+        }
+        .stat-card .stat-value {
+            font-size: 2rem;
+        }
+        .review-card {
+            padding: 1.25rem 1.5rem;
+        }
+    }
+
+    /* Standard desktops (1024px–1439px): balanced layout */
+    @media (min-width: 1024px) and (max-width: 1439px) {
+        .block-container {
+            max-width: 1100px !important;
+            padding-left: 1.5rem !important;
+            padding-right: 1.5rem !important;
+        }
+    }
+
+    /* Small desktops / large tablets (768px–1023px) */
+    @media (min-width: 768px) and (max-width: 1023px) {
+        .block-container {
+            max-width: 100% !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+        .aladdin-header {
+            padding: 1rem 1.25rem;
+        }
+        .aladdin-header h1 {
+            font-size: 1.1rem;
+        }
+        .stat-card .stat-value {
+            font-size: 1.5rem;
+        }
+        .stat-card {
+            padding: 0.85rem 0.75rem;
+        }
+        .step-nav-item {
+            font-size: 0.75rem;
+            padding: 0.6rem 0.35rem 0.55rem;
+        }
+        .review-card-meta {
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+    }
+
+    /* Compact / small screens (<768px) */
+    @media (max-width: 767px) {
+        .block-container {
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+        }
+        .aladdin-header {
+            padding: 0.85rem 1rem;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-start;
+        }
+        .aladdin-header h1 {
+            font-size: 1rem;
+        }
+        .step-nav-bar {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .step-nav-item {
+            font-size: 0.72rem;
+            min-width: max-content;
+            padding: 0.55rem 0.4rem 0.5rem;
+        }
+        .stat-card .stat-value {
+            font-size: 1.4rem;
+        }
+        .review-card {
+            padding: 0.85rem 0.75rem;
+        }
+        .review-card-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.35rem;
+        }
+        .review-card-meta {
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .confidence-gauge-zone-labels {
+            font-size: 0.5rem;
+        }
     }
 
     /* ===== PRINT STYLES ===== */
