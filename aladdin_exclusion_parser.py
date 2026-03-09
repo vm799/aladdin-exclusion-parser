@@ -547,35 +547,69 @@ st.markdown("""
     /* ===== BUTTON OVERRIDES ===== */
     .stButton > button {
         border-radius: 8px !important;
-        font-weight: 500 !important;
+        font-weight: 600 !important;
         font-size: 0.82rem !important;
-        letter-spacing: 0 !important;
+        letter-spacing: 0.01em !important;
         transition: all 0.15s ease !important;
         cursor: pointer !important;
-        padding: 0.4rem 1rem !important;
+        padding: 0.45rem 1.1rem !important;
+        border: 1.5px solid var(--blk-border) !important;
     }
 
     .stButton > button[kind="primary"] {
         background-color: var(--blk-green) !important;
-        border-color: var(--blk-green) !important;
+        border: 1.5px solid var(--blk-green) !important;
         color: #FFFFFF !important;
+        box-shadow: 0 1px 3px rgba(26, 67, 50, 0.2) !important;
     }
 
     .stButton > button[kind="primary"]:hover {
         background-color: #143728 !important;
+        border-color: #0F2D1F !important;
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(26, 67, 50, 0.3);
+        box-shadow: 0 4px 12px rgba(26, 67, 50, 0.35) !important;
     }
 
     .stButton > button[kind="secondary"] {
         background-color: var(--blk-white) !important;
-        border: 1px solid var(--blk-border) !important;
+        border: 1.5px solid #9CA3AF !important;
         color: var(--blk-dark) !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06) !important;
     }
 
     .stButton > button[kind="secondary"]:hover {
-        background-color: var(--blk-bg-cool) !important;
-        border-color: var(--blk-light-gray) !important;
+        background-color: #F3F4F6 !important;
+        border-color: #6B7280 !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+        transform: translateY(-1px);
+    }
+
+    /* ===== REJECT BUTTON (destructive secondary) ===== */
+    .stButton > button[kind="secondary"]:has(+ [class]) ,
+    /* Reject buttons get red treatment via key naming */
+    div[data-testid="column"]:nth-child(3) .stButton > button[kind="secondary"] {
+        border-color: #F87171 !important;
+        color: #B91C1C !important;
+        background-color: #FFF5F5 !important;
+    }
+    div[data-testid="column"]:nth-child(3) .stButton > button[kind="secondary"]:hover {
+        background-color: #FEE2E2 !important;
+        border-color: #EF4444 !important;
+        color: #991B1B !important;
+        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15) !important;
+    }
+
+    /* ===== OVERRIDE BUTTON (amber tertiary) ===== */
+    div[data-testid="column"]:nth-child(4) .stButton > button[kind="secondary"] {
+        border-color: #FBBF24 !important;
+        color: #92400E !important;
+        background-color: #FFFBEB !important;
+    }
+    div[data-testid="column"]:nth-child(4) .stButton > button[kind="secondary"]:hover {
+        background-color: #FEF3C7 !important;
+        border-color: #F59E0B !important;
+        color: #78350F !important;
+        box-shadow: 0 2px 8px rgba(217, 119, 6, 0.15) !important;
     }
 
     /* ===== STEP NAV BUTTONS ===== */
@@ -601,8 +635,18 @@ st.markdown("""
     /* ===== DOWNLOAD BUTTON ===== */
     .stDownloadButton > button {
         border-radius: 8px !important;
-        font-weight: 500 !important;
+        font-weight: 600 !important;
         cursor: pointer !important;
+        border: 1.5px solid #9CA3AF !important;
+        padding: 0.45rem 1.1rem !important;
+        transition: all 0.15s ease !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06) !important;
+    }
+    .stDownloadButton > button:hover {
+        border-color: #6B7280 !important;
+        background-color: #F3F4F6 !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+        transform: translateY(-1px);
     }
 
     /* ===== EXPANDER OVERRIDES ===== */
@@ -971,6 +1015,7 @@ st.markdown("""
 
     .stButton > button[kind="secondary"]:active {
         background-color: #E5E7EB !important;
+        border-color: #4B5563 !important;
         transform: translateY(0) !important;
         box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15) !important;
     }
@@ -981,9 +1026,10 @@ st.markdown("""
     }
     .stButton > button[kind="secondary"]:disabled,
     .stButton > button[kind="secondary"][disabled] {
-        background-color: var(--blk-white) !important;
-        color: var(--blk-dark) !important;
-        opacity: 0.5 !important;
+        background-color: #F9FAFB !important;
+        color: #9CA3AF !important;
+        border-color: #D1D5DB !important;
+        opacity: 0.6 !important;
         cursor: not-allowed !important;
         transform: none !important;
         box-shadow: none !important;
@@ -991,7 +1037,7 @@ st.markdown("""
     }
     .stButton > button[kind="secondary"]:disabled:hover,
     .stButton > button[kind="secondary"][disabled]:hover {
-        background-color: var(--blk-white) !important;
+        background-color: #F9FAFB !important;
         transform: none !important;
         box-shadow: none !important;
     }
