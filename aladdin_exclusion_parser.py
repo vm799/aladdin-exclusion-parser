@@ -195,7 +195,7 @@ st.markdown("""
         --blk-blue: #1E40AF;
         --blk-blue-light: #DBEAFE;
         --glass-bg: rgba(255, 255, 255, 0.85);
-        --glass-border: rgba(0, 0, 0, 0.06);
+        --glass-border: rgba(0, 0, 0, 0.12);
         --glass-shadow: 0 2px 16px rgba(0, 0, 0, 0.10);
     }
 
@@ -510,7 +510,7 @@ st.markdown("""
         background: rgba(255, 255, 255, 0.88);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(0, 0, 0, 0.06);
+        border: 1px solid rgba(0, 0, 0, 0.12);
         border-radius: 12px;
         padding: 0.85rem 1rem;
         margin-top: 0.35rem;
@@ -632,7 +632,7 @@ st.markdown("""
         background: rgba(255, 255, 255, 0.45);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        border: 1.5px dashed rgba(107, 114, 128, 0.35);
+        border: 1.5px dashed rgba(107, 114, 128, 0.5);
         border-radius: 12px;
         padding: 2rem;
         text-align: center;
@@ -711,7 +711,7 @@ st.markdown("""
         background: rgba(255, 255, 255, 0.88);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(0, 0, 0, 0.06);
+        border: 1px solid rgba(0, 0, 0, 0.12);
         border-radius: 16px;
         padding: 1.5rem;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
@@ -721,7 +721,7 @@ st.markdown("""
     .signoff-hint {
         background: rgba(243, 244, 246, 0.7);
         backdrop-filter: blur(8px);
-        border: 1px solid rgba(0, 0, 0, 0.06);
+        border: 1px solid rgba(0, 0, 0, 0.12);
         border-radius: 8px;
         padding: 0.6rem 0.85rem;
         color: #4B5563;
@@ -877,7 +877,7 @@ st.markdown("""
     /* ===== SIDEBAR ACTIVITY PANEL ===== */
     .sidebar-activity {
         background: rgba(243, 244, 246, 0.6);
-        border: 1px solid rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.12);
         border-radius: 8px;
         padding: 0.6rem 0.75rem;
         font-size: 0.78rem;
